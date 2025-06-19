@@ -40,6 +40,15 @@ public class TodoService : ITodoService
         return _todoMapper.MapToDto(createdTodo);
     }
 
+    public async Task CompleteTodoAsync(int id)
+    {
+        var todo = await _todoRepository.GetTodoByIdAsync(id);
+        if (todo == null)
+            throw new ArgumentException($"Todo with ID {id} not found");
+        todo.IsCompleted = true;
+        await _todoRepository.UpdateAsync(todo);
+    }
+
     public async Task<TodoDto> UpdateTodoAsync(UpdateTodoDto updateTodoDto)
     {
         // First, get the existing todo

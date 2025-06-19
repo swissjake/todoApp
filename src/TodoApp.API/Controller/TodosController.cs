@@ -48,6 +48,7 @@ public class TodosController : ControllerBase
     [HttpPut("{id}")]
     public async Task<IActionResult> UpdateTodo(int id, [FromBody] UpdateTodoDto updateTodoDto)
     {
+        updateTodoDto.Id = id;
         var updatedTodo = await _todoService.UpdateTodoAsync(updateTodoDto);
         return Ok(updatedTodo);
     }
@@ -57,6 +58,13 @@ public class TodosController : ControllerBase
     {
         await _todoService.DeleteTodoAsync(id);
         return NoContent();
+    }
+
+    [HttpPut("{id}/complete")]
+    public async Task<IActionResult> CompleteTodo(int id)
+    {
+        await _todoService.CompleteTodoAsync(id);
+        return Ok();
     }
 
     [HttpGet("completed")]

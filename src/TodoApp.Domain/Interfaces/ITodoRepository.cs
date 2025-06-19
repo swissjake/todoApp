@@ -16,4 +16,6 @@ public interface ITodoRepository
     Task<IEnumerable<Todo>> GetAllCompletedAsync();
     Task<IEnumerable<Todo>> GetAllIncompleteAsync();
 
+    Task<Todo> CompleteTodoAsync(int id);
+
 }

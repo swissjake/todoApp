@@ -39,6 +39,16 @@ public class TodoRepository : ITodoRepository
         return todo;
     }
 
+    public async Task<Todo> CompleteTodoAsync(int id)
+    {
+        var todo = await _context.Todos.FindAsync(id);
+        if (todo == null)
+            throw new ArgumentException($"Todo with ID {id} not found");
+        todo.IsCompleted = true;
+        await _context.SaveChangesAsync();
+        return todo;
+    }
+
     public async Task DeleteAsync(int id)
     {
         var todo = await _context.Todos.FindAsync(id);

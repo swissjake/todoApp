@@ -48,8 +48,19 @@ public class AuthController : ControllerBase
     [HttpPost("refresh-token")]
     public async Task<IActionResult> RefreshToken([FromBody] RefreshTokenDto refreshTokenDto)
     {
-        var response = await _authService.RefreshTokenAsync(refreshTokenDto.RefreshToken);
-        return Ok(response);
+        try
+        {
+            var response = await _authService.RefreshTokenAsync(refreshTokenDto.RefreshToken);
+            return Ok(response);
+        }
+        catch (UnauthorizedAccessException ex)
+        {
+            return Unauthorized(new { message = ex.Message });
+        }
+        catch (Exception ex)
+        {
+            return BadRequest(new { message = ex.Message });
+        }
     }
 
     [HttpPost("logout")]

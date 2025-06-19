@@ -12,4 +12,5 @@ public interface ITodoService
     Task DeleteTodoAsync(int id);
     Task<IEnumerable<TodoDto>> GetAllCompletedAsync();
     Task<IEnumerable<TodoDto>> GetAllIncompleteAsync();
+    Task CompleteTodoAsync(int id);
 }

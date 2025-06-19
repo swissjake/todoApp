@@ -94,14 +94,16 @@ public class AuthService : IAuthService
 
     public async Task<ApiResponseDto> RefreshTokenAsync(string refreshToken)
     {
-        // Validate refresh token
-        if (!_jwtService.ValidateRefreshToken(refreshToken))
-            throw new UnauthorizedAccessException("Invalid refresh token");
-
-        // Get refresh token from database
+        // Get refresh token from database (no JWT validation needed for random string tokens)
         var refreshTokenEntity = await _refreshTokenRepository.GetByTokenAsync(refreshToken);
-        if (refreshTokenEntity == null || refreshTokenEntity.IsRevoked || refreshTokenEntity.ExpiresAt < DateTime.UtcNow)
-            throw new UnauthorizedAccessException("Invalid or expired refresh token");
+        if (refreshTokenEntity == null)
+            throw new UnauthorizedAccessException("Refresh token not found in database");
+
+        if (refreshTokenEntity.IsRevoked)
+            throw new UnauthorizedAccessException("Refresh token has been revoked");
+
+        if (refreshTokenEntity.ExpiresAt < DateTime.UtcNow)
+            throw new UnauthorizedAccessException("Refresh token has expired");
 
         // Get user
         var user = await _userRepository.GetUserByIdAsync(refreshTokenEntity.UserId);
@@ -136,6 +138,7 @@ public class AuthService : IAuthService
             User = _userMapper.MapToDto(user)
         };
     }
+
 
     public async Task LogoutAsync(string refreshToken)
     {

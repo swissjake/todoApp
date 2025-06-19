@@ -9,6 +9,7 @@ using TodoApp.Application.MappingInterface;
 using TodoApp.Application.MappingImplementaton;
 using TodoApp.Infrastructure.RepositoryImplementation;
 using TodoApp.Infrastructure.Db;
+using TodoApp.Application.Services;
 
 
 
@@ -25,12 +26,16 @@ public static class ServiceContainer
         // Register Repository Implementations
         services.AddScoped<ITodoRepository, TodoRepository>();
         services.AddScoped<IUserRepository, UserRepository>();
+        services.AddScoped<IRefreshTokenRepository, RefreshTokenRepository>();
 
 
         services.AddScoped<IUserService, UserService>();
         services.AddScoped<IUserMapper, UserMapper>();
         services.AddScoped<ITodoService, TodoService>();
         services.AddScoped<ITodoMapper, TodoMapper>();
+        services.AddScoped<IAuthService, AuthService>();
+        services.AddScoped<IJwtService, JwtService>();
+
         return services;
     }
 }

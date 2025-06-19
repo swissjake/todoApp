@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using TodoApp.Application.Dto.Todo;
 using TodoApp.Application.UseCaseInterface;
@@ -6,6 +7,7 @@ namespace TodoApp.API.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
+[Authorize]
 public class TodosController : ControllerBase
 {
     private readonly ITodoService _todoService;
@@ -55,5 +57,19 @@ public class TodosController : ControllerBase
     {
         await _todoService.DeleteTodoAsync(id);
         return NoContent();
+    }
+
+    [HttpGet("completed")]
+    public async Task<IActionResult> GetCompletedTodos()
+    {
+        var todos = await _todoService.GetAllCompletedAsync();
+        return Ok(todos);
+    }
+
+    [HttpGet("incomplete")]
+    public async Task<IActionResult> GetIncompleteTodos()
+    {
+        var todos = await _todoService.GetAllIncompleteAsync();
+        return Ok(todos);
     }
 }

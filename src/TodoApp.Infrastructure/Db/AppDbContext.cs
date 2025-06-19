@@ -14,4 +14,5 @@ public class AppDbContext : DbContext
 
     public DbSet<Todo> Todos { get; set; }
     public DbSet<User> Users { get; set; }
+    public DbSet<RefreshToken> RefreshTokens { get; set; }
 }

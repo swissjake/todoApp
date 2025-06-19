@@ -10,4 +10,6 @@ public interface ITodoService
     Task<TodoDto> CreateTodoAsync(CreateTodoDto createTodoDto);
     Task<TodoDto> UpdateTodoAsync(UpdateTodoDto updateTodoDto);
     Task DeleteTodoAsync(int id);
+    Task<IEnumerable<TodoDto>> GetAllCompletedAsync();
+    Task<IEnumerable<TodoDto>> GetAllIncompleteAsync();
 }

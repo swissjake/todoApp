@@ -24,12 +24,12 @@ public class UserService : IUserService
         return users.Select(_userMapper.MapToDto);
     }
 
-    public async Task<UserDto> CreateUserAsync(CreateUserDto createUserDto)
-    {
-        var user = _userMapper.MapToEntity(createUserDto);
-        var createdUser = await _userRepository.CreateUserAsync(user);
-        return _userMapper.MapToDto(createdUser);
-    }
+    // public async Task<UserDto> CreateUserAsync(CreateUserDto createUserDto)
+    // {
+    //     var user = _userMapper.MapToEntity(createUserDto);
+    //     var createdUser = await _userRepository.CreateUserAsync(user);
+    //     return _userMapper.MapToDto(createdUser);
+    // }
 
     public async Task<UserDto> GetUserByIdAsync(int id)
     {
@@ -45,6 +45,14 @@ public class UserService : IUserService
         var user = _userMapper.MapToEntity(updateUserDto);
         var updatedUser = await _userRepository.UpdateUserAsync(user);
         return _userMapper.MapToDto(updatedUser);
+    }
+
+    public async Task<UserDto> GetUserByEmailAsync(string email)
+    {
+        var user = await _userRepository.GetUserByEmailAsync(email);
+        if (user == null)
+            throw new ArgumentException($"User with email {email} not found");
+        return _userMapper.MapToDto(user);
     }
 
     public async Task DeleteUserAsync(int id)

@@ -42,8 +42,28 @@ public class TodoService : ITodoService
 
     public async Task<TodoDto> UpdateTodoAsync(UpdateTodoDto updateTodoDto)
     {
-        var todo = _todoMapper.MapToEntity(updateTodoDto);
-        var updatedTodo = await _todoRepository.UpdateAsync(todo);
+        // First, get the existing todo
+        var existingTodo = await _todoRepository.GetTodoByIdAsync(updateTodoDto.Id);
+        if (existingTodo == null)
+            throw new ArgumentException($"Todo with ID {updateTodoDto.Id} not found");
+
+        // Update the existing todo properties
+        if (!string.IsNullOrEmpty(updateTodoDto.Title))
+            existingTodo.Title = updateTodoDto.Title;
+
+        if (updateTodoDto.Description != null)
+            existingTodo.Description = updateTodoDto.Description;
+
+        if (updateTodoDto.IsCompleted != null)
+        {
+            if (updateTodoDto.IsCompleted.Value)
+                existingTodo.IsCompleted = true;
+            else
+                existingTodo.IsCompleted = false;
+        }
+
+        // Update the existing todo in the database
+        var updatedTodo = await _todoRepository.UpdateAsync(existingTodo);
         return _todoMapper.MapToDto(updatedTodo);
     }
 

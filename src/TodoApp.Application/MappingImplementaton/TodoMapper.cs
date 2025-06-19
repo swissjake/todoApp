@@ -71,7 +71,7 @@ public class TodoMapper : ITodoMapper
         {
             Title = updateTodoDto.Title,
             Description = updateTodoDto.Description,
-            IsCompleted = updateTodoDto.IsCompleted,
+            IsCompleted = updateTodoDto.IsCompleted ?? false,
             CreatedAt = DateTime.UtcNow,
             UpdatedAt = DateTime.UtcNow
         };

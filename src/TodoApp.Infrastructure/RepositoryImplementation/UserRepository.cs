@@ -39,6 +39,11 @@ public class UserRepository : IUserRepository
         return user;
     }
 
+    public async Task<User?> GetUserByEmailAsync(string email)
+    {
+        return await _context.Users.FirstOrDefaultAsync(u => u.Email == email);
+    }
+
     public async Task DeleteUserAsync(int id)
     {
         var user = await _context.Users.FindAsync(id);

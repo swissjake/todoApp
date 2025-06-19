@@ -24,12 +24,12 @@ public class UserService : IUserService
         return users.Select(_userMapper.MapToDto);
     }
 
-    // public async Task<UserDto> CreateUserAsync(CreateUserDto createUserDto)
-    // {
-    //     var user = _userMapper.MapToEntity(createUserDto);
-    //     var createdUser = await _userRepository.CreateUserAsync(user);
-    //     return _userMapper.MapToDto(createdUser);
-    // }
+    public async Task<UserDto> CreateUserAsync(CreateUserDto createUserDto)
+    {
+        var user = _userMapper.MapToEntity(createUserDto);
+        var createdUser = await _userRepository.CreateUserAsync(user);
+        return _userMapper.MapToDto(createdUser);
+    }
 
     public async Task<UserDto> GetUserByIdAsync(int id)
     {

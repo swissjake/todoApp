@@ -15,17 +15,21 @@ public class AuthService : IAuthService
     private readonly IRefreshTokenRepository _refreshTokenRepository;
     private readonly IUserMapper _userMapper;
     private readonly IJwtService _jwtService;
+    private readonly IPasswordService _passwordService;
 
     public AuthService(
         IUserRepository userRepository,
         IRefreshTokenRepository refreshTokenRepository,
         IUserMapper userMapper,
-        IJwtService jwtService)
+        IJwtService jwtService,
+        IPasswordService passwordService)
+
     {
         _userRepository = userRepository;
         _refreshTokenRepository = refreshTokenRepository;
         _userMapper = userMapper;
         _jwtService = jwtService;
+        _passwordService = passwordService;
     }
 
     public async Task<ApiResponseDto> RegisterAsync(RegisterDto registerDto)
@@ -39,7 +43,7 @@ public class AuthService : IAuthService
         {
             Name = registerDto.Name,
             Email = registerDto.Email,
-            Password = registerDto.Password, // In real app, hash this
+            Password = _passwordService.HashPassword(registerDto.Password),
             CreatedAt = DateTime.UtcNow,
             UpdatedAt = DateTime.UtcNow
         };
@@ -49,8 +53,8 @@ public class AuthService : IAuthService
         // Return user info without tokens
         return new ApiResponseDto
         {
-            AccessToken = string.Empty,  // No token on registration
-            RefreshToken = string.Empty, // No token on registration
+            AccessToken = string.Empty,
+            RefreshToken = string.Empty,
             AccessTokenExpiresAt = DateTime.UtcNow,
             RefreshTokenExpiresAt = DateTime.UtcNow,
             User = _userMapper.MapToDto(createdUser)
@@ -60,13 +64,11 @@ public class AuthService : IAuthService
     public async Task<ApiResponseDto> LoginAsync(LoginDto loginDto)
     {
         var user = await _userRepository.GetUserByEmailAsync(loginDto.Email);
-        if (user == null || user.Password != loginDto.Password)
+        if (user == null || !_passwordService.VerifyPassword(loginDto.Password, user.Password))
             throw new UnauthorizedAccessException("Invalid credentials");
 
-        // Revoke old refresh tokens
         await _refreshTokenRepository.RevokeAllUserTokensAsync(user.Id);
 
-        // Generate new tokens
         var accessToken = _jwtService.GenerateAccessToken(user);
         var refreshToken = _jwtService.GenerateRefreshToken();
 

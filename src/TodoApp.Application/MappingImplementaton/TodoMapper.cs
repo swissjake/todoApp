@@ -59,7 +59,7 @@ public class TodoMapper : ITodoMapper
         {
             Title = createTodoDto.Title,
             Description = createTodoDto.Description,
-            IsCompleted = false, // New todos are not completed by default
+            IsCompleted = false,
             CreatedAt = DateTime.UtcNow,
             UpdatedAt = DateTime.UtcNow
         };

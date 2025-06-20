@@ -37,7 +37,7 @@ A full-stack **Todo application** built using:
   - Fully integrated with backend API
 
 - 📄 **API Documentation**
-  - Swagger UI for testing endpoints and inspecting contracts
+  - Swagger UI for testing endpoints
 
 ---
 

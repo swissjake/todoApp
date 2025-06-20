@@ -22,7 +22,6 @@ A full-stack **Todo application** built using:
 
   - Separated layers: Domain, Application, Infrastructure, API
   - Interface-driven design with dependency inversion
-  - Fully testable and maintainable structure
 
 - ✅ **Todo Functionality**
 
